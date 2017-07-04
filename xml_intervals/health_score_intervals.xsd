@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="intervals" type="intervalsType">
+        <xs:annotation>
+            <xs:documentation>&lt;!DOCTYPE intervals PUBLIC "-//Beginning XML//DTD Intervals//EN" "intervals.dtd">
+            </xs:documentation>
+            <xs:documentation>
+                &lt;intervals &gt; is the root tag. It has no attributes to illustrate its properties.
+                But it has one child named &lt;interval &gt; as its unique child. A tag of intervals can have many
+                &lt;interval &gt; as its children. intervals means that there are many interval(s) in it.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+
+    <!--<xs:complexType name="intervalType">-->
+    <!--<xs:sequence>-->
+    <!--<xs:element type="entryType" name="entry" maxOccurs="unbounded" minOccurs="0"/>-->
+    <!--</xs:sequence>-->
+    <!--<xs:attribute type="xs:string" name="end" use="optional"/>-->
+    <!--<xs:attribute type="xs:string" name="id" use="optional"/>-->
+    <!--<xs:attribute type="xs:string" name="is-even" use="optional"/>-->
+    <!--<xs:attribute type="xs:string" name="root-type" use="optional"/>-->
+    <!--<xs:attribute type="xs:string" name="start" use="optional"/>-->
+    <!--</xs:complexType>-->
+
+    <xs:complexType name="intervalsType">
+        <xs:annotation>
+            <xs:documentation>
+                Here defines the tag of interval. An interval means a part of interval.
+                Such as: 0~100 divided to 5 parts is-even. 0~10 is an instance of interval.
+                `interval` has five attributes which are id, is-even, root-type, start,end.
+                ` id:           id is a unique identifier to indicate the interval is the only one existing in this xml config.
+                ` is-even:      indicating that whether the distribution is even or not. true means even, false otherwise.
+                ` root-type:    root-type is an enumeration type. It means the situations of values of boundaries.
+                                It has three enums:
+                                ` inclusive_exclusive
+                                ` exclusive_inclusive
+                                ` exclusive_exclusive
+                ` start:        start is a value of integer type which means that the start value of interval. Such as 0 as general one.
+                ` end:          end is a value of integer type which means that the end value of interval. Such as 100 as general one.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element type="intervalType" name="interval" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="intervalType">
+        <xs:sequence>
+            <xs:element type="entryType" name="entry" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:ID" use="required"/>
+        <xs:attribute name="is-even" type="xs:boolean" default="false" use="optional"/>
+        <xs:attribute name="root-type" default="inclusive_exclusive" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="inclusive_exclusive"/>
+                    <xs:enumeration value="exclusive_inclusive"/>
+                    <xs:enumeration value="exclusive_exclusive"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="start" type="xs:integer" use="required"/>
+        <xs:attribute name="end" type="xs:integer" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="entryType" mixed="true">
+        <xs:annotation>
+            <xs:documentation>
+                The entry behaves like its name.
+                &lt;entry from="0" to="20" index="1"/&gt;
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="entryContentType">
+                <xs:attribute type="xs:integer" name="from" use="required"/>
+                <xs:attribute type="xs:integer" name="to" use="required"/>
+                <xs:attribute type="xs:integer" name="index" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="entryContentType">
+        <xs:union memberTypes="xs:integer xs:string xs:double xs:float xs:positiveInteger"/>
+    </xs:simpleType>
+
+</xs:schema>
